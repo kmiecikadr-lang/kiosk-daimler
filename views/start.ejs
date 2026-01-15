@@ -2,89 +2,113 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Wybierz lokalizację</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { 
       font-family: Arial; 
       background: #ffffff;
-      margin: 0; 
-      padding: 0;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
     .container {
       text-align: center;
-      padding: 40px;
+      width: 100%;
+      max-width: 1200px;
     }
     .logo {
-      width: 150px;
-      margin-bottom: 30px;
+      width: clamp(80px, 15vw, 150px);
+      margin-bottom: clamp(20px, 5vw, 30px);
     }
     h1 {
       color: #333;
-      font-size: 3rem;
-      margin-bottom: 20px;
+      font-size: clamp(1.5rem, 5vw, 3rem);
+      margin-bottom: clamp(10px, 3vw, 20px);
     }
     h2 {
       color: #666;
-      font-size: 1.5rem;
-      margin-bottom: 50px;
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      margin-bottom: clamp(30px, 6vw, 50px);
       font-weight: normal;
     }
     .locations {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      max-width: 1200px;
-      margin: 0 auto;
+      grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+      gap: clamp(15px, 3vw, 30px);
+      width: 100%;
     }
     .location-btn {
       background: white;
       border: 3px solid #e0e0e0;
       border-radius: 20px;
-      padding: 50px 40px;
+      padding: clamp(30px, 6vw, 50px) clamp(20px, 4vw, 40px);
       cursor: pointer;
       transition: all 0.3s;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .location-btn:active {
+      transform: scale(0.95);
     }
     .location-btn:hover {
-      transform: translateY(-10px);
+      transform: translateY(-5px);
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       border-color: #4CAF50;
     }
     .location-btn .icon {
-      font-size: 4rem;
-      margin-bottom: 20px;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      margin-bottom: clamp(10px, 3vw, 20px);
     }
     .location-btn .name {
-      font-size: 1.8rem;
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
       font-weight: bold;
       color: #333;
-      margin-bottom: 10px;
+      margin-bottom: clamp(5px, 2vw, 10px);
     }
     .location-btn .subtitle {
-      font-size: 1rem;
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
       color: #666;
     }
     .admin-link {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
+      bottom: clamp(15px, 3vw, 30px);
+      right: clamp(15px, 3vw, 30px);
       background: #4CAF50;
       color: white;
-      padding: 15px 30px;
+      padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px);
       border-radius: 30px;
       text-decoration: none;
       font-weight: bold;
       transition: all 0.3s;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
+      z-index: 1000;
     }
     .admin-link:hover {
       background: #45a049;
       transform: scale(1.05);
+    }
+    .admin-link:active {
+      transform: scale(0.95);
+    }
+    
+    @media (max-width: 768px) {
+      body { padding: 15px; }
+      .locations { gap: 15px; }
+      .admin-link { bottom: 15px; right: 15px; padding: 10px 20px; }
+    }
+    
+    @media (max-width: 480px) {
+      body { padding: 10px; }
+      .container { padding-bottom: 70px; }
+      .locations { gap: 12px; }
+      .location-btn { border-width: 2px; }
     }
   </style>
 </head>
@@ -119,15 +143,10 @@
   
   <script>
     function openKiosk(location) {
+      // Zapisz informację że trzeba włączyć fullscreen
+      sessionStorage.setItem('requestFullscreen', 'true');
+      // Przekieruj na kiosk
       window.location.href = '/' + location;
-      
-      setTimeout(() => {
-        if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-          document.documentElement.webkitRequestFullscreen();
-        }
-      }, 1000);
     }
   </script>
 </body>
