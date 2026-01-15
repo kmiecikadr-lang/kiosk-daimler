@@ -143,10 +143,28 @@
   
   <script>
     function openKiosk(location) {
-      // Zapisz informację że trzeba włączyć fullscreen
-      sessionStorage.setItem('requestFullscreen', 'true');
-      // Przekieruj na kiosk
-      window.location.href = '/' + location;
+      const url = '/' + location;
+      
+      // Otwórz w nowym oknie
+      const win = window.open(url, '_blank', 'fullscreen=yes');
+      
+      // Próbuj włączyć fullscreen po załadowaniu
+      if (win) {
+        win.addEventListener('load', function() {
+          setTimeout(() => {
+            const elem = win.document.documentElement;
+            if (elem.requestFullscreen) {
+              elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+              elem.webkitRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+              elem.mozRequestFullScreen();
+            } else if (elem.msRequestFullscreen) {
+              elem.msRequestFullscreen();
+            }
+          }, 100);
+        });
+      }
     }
   </script>
 </body>
