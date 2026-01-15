@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Dziękujemy</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { 
+      font-family: Arial; 
+      text-align: center; 
+      padding: 20px; 
+      background: #fff; 
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wrapper { width: 100%; max-width: 800px; }
+    img { width: 100px; margin: 20px auto; display: block; }
+    h1 { font-size: clamp(2rem, 8vw, 3.5rem); color: #4CAF50; margin: 20px; }
+    h2 { font-size: clamp(1.2rem, 4vw, 2rem); color: #333; margin: 20px; }
+    h3 { font-size: clamp(1rem, 3vw, 1.5rem); margin: 30px; }
+    textarea { 
+      width: 90%; 
+      max-width: 600px; 
+      padding: 15px; 
+      font-size: clamp(14px, 3vw, 18px); 
+      border: 2px solid #ccc; 
+      border-radius: 10px; 
+      margin: 20px auto;
+      display: block;
+      font-family: Arial;
+      resize: vertical;
+    }
+    button { 
+      padding: clamp(12px, 3vw, 18px) clamp(30px, 6vw, 50px); 
+      font-size: clamp(1rem, 3vw, 1.3rem); 
+      border: none; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      margin: 10px; 
+      touch-action: manipulation;
+      font-weight: bold;
+    }
+    .yes { background: #4CAF50; color: white; }
+    .no { background: #f44336; color: white; }
+    button:active { transform: scale(0.95); }
+    
+    @media (max-width: 768px) {
+      body { padding: 15px; }
+      img { width: 80px; margin: 15px auto; }
+      textarea { width: 95%; }
+    }
+    
+    @media (max-width: 480px) {
+      img { width: 60px; margin: 10px auto; }
+      textarea { padding: 12px; }
+      button { margin: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg">
+    <h1>Dziękujemy</h1>
+    <h2>Daimler Truck Retail Polska</h2>
+    
+    <div id="q">
+      <h3>Czy chcesz pozostawić komentarz?</h3>
+      <button class="yes" onclick="show()">TAK</button>
+      <button class="no" onclick="save('')">NIE</button>
+    </div>
+    
+    <div id="c" style="display:none">
+      <h3>Zostaw komentarz:</h3>
+      <textarea id="txt" rows="5"></textarea>
+      <button class="yes" onclick="save(document.getElementById('txt').value)">Wyślij</button>
+    </div>
+    
+    <div id="done" style="display:none">
+      <h1>Dziękujemy za opinię!</h1>
+    </div>
+  </div>
+  
+  <script>
+    window.onload = function() {
+      setTimeout(enterFullscreen, 500);
+    };
+    
+    function enterFullscreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.mozRequestFullScreen) {
+        elem.mozRequestFullScreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    }
+    
+    function show() {
+      document.getElementById('q').style.display = 'none';
+      document.getElementById('c').style.display = 'block';
+    }
+    
+    function save(comment) {
+      fetch('/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ loc: '<%= loc %>', rating: '<%= rating %>', comment: comment })
+      })
+      .then(r => r.json())
+      .then(d => {
+        if (d.ok) {
+          document.getElementById('q').style.display = 'none';
+          document.getElementById('c').style.display = 'none';
+          document.getElementById('done').style.display = 'block';
+          setTimeout(() => location.href = '/<%= loc %>', 3000);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wybierz lokalizację</title>
+  <style>
+    body { 
+      font-family: Arial; 
+      background: #ffffff;
+      margin: 0; 
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+    }
+    .logo {
+      width: 150px;
+      margin-bottom: 30px;
+    }
+    h1 {
+      color: #333;
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #666;
+      font-size: 1.5rem;
+      margin-bottom: 50px;
+      font-weight: normal;
+    }
+    .locations {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .location-btn {
+      background: white;
+      border: 3px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 50px 40px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .location-btn:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border-color: #4CAF50;
+    }
+    .location-btn .icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+    .location-btn .name {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .location-btn .subtitle {
+      font-size: 1rem;
+      color: #666;
+    }
+    .admin-link {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #4CAF50;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .admin-link:hover {
+      background: #45a049;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg" alt="Mercedes" class="logo">
+    <h1>Daimler Truck Retail Polska</h1>
+    <h2>Wybierz lokalizację kiosku:</h2>
+    
+    <div class="locations">
+      <button class="location-btn" onclick="openKiosk('ruda')">
+        <div class="icon">📍</div>
+        <div class="name">Ruda Śląska</div>
+        <div class="subtitle">Kliknij aby uruchomić</div>
+      </button>
+      
+      <button class="location-btn" onclick="openKiosk('siedlce')">
+        <div class="icon">📍</div>
+        <div class="name">Siedlce</div>
+        <div class="subtitle">Kliknij aby uruchomić</div>
+      </button>
+      
+      <button class="location-btn" onclick="openKiosk('emilianow')">
+        <div class="icon">📍</div>
+        <div class="name">Emilianów</div>
+        <div class="subtitle">Kliknij aby uruchomić</div>
+      </button>
+    </div>
+  </div>
+  
+  <a href="/admin/login" class="admin-link">🔐 Panel Admina</a>
+  
+  <script>
+    function openKiosk(location) {
+      window.location.href = '/' + location;
+      
+      setTimeout(() => {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen();
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
