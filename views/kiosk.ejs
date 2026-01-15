@@ -53,20 +53,39 @@
       -webkit-user-select: none;
       user-select: none;
     }
-    .btn:active {
-      transform: scale(0.95);
-    }
-    .btn:hover { 
-      transform: translateY(-5px); 
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
+    .btn:active { transform: scale(0.95); }
+    .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
     .green { background: #e8f5e9; border-color: #4CAF50; }
     .yellow { background: #fff9c4; border-color: #FFC107; }
     .red { background: #ffebee; border-color: #f44336; }
-    .emoji { 
-      font-size: clamp(60px, 15vw, 90px); 
-      display: block; 
-      margin-bottom: 15px; 
+    .emoji { font-size: clamp(60px, 15vw, 90px); display: block; margin-bottom: 15px; }
+    
+    /* Floating fullscreen button */
+    #fullscreenBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      z-index: 9999;
+      display: none;
+      animation: pulse 2s infinite;
+    }
+    
+    #fullscreenBtn.show {
+      display: block;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
     
     @media (max-width: 768px) {
@@ -75,6 +94,7 @@
       h1 { margin: 15px; }
       .badge { padding: 8px 15px; margin: 15px; }
       .btns { gap: 15px; margin: 20px auto; }
+      #fullscreenBtn { bottom: 15px; right: 15px; padding: 12px 20px; font-size: 0.9rem; }
     }
     
     @media (max-width: 480px) {
@@ -105,41 +125,56 @@
     </div>
   </div>
   
+  <button id="fullscreenBtn" onclick="activateFullscreen()">🖥️ Włącz pełny ekran</button>
+  
   <script>
-    // Włącz fullscreen przy załadowaniu strony
-    window.addEventListener('load', function() {
-      ensureFullscreen();
-    });
+    const fsBtn = document.getElementById('fullscreenBtn');
     
-    // Monitoruj czy fullscreen jest aktywny
-    document.addEventListener('fullscreenchange', ensureFullscreen);
-    document.addEventListener('webkitfullscreenchange', ensureFullscreen);
-    document.addEventListener('mozfullscreenchange', ensureFullscreen);
-    document.addEventListener('MSFullscreenChange', ensureFullscreen);
-    
-    function ensureFullscreen() {
-      // Sprawdź czy NIE jesteśmy w fullscreen
-      if (!document.fullscreenElement && 
-          !document.webkitFullscreenElement && 
-          !document.mozFullScreenElement && 
-          !document.msFullscreenElement) {
-        
-        // Włącz fullscreen
-        const elem = document.documentElement;
-        
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen().catch(err => console.log('Fullscreen error:', err));
-        } else if (elem.webkitRequestFullscreen) {
-          elem.webkitRequestFullscreen();
-        } else if (elem.mozRequestFullScreen) {
-          elem.mozRequestFullScreen();
-        } else if (elem.msRequestFullscreen) {
-          elem.msRequestFullscreen();
-        }
+    function checkFullscreen() {
+      const isFullscreen = document.fullscreenElement || 
+                          document.webkitFullscreenElement || 
+                          document.mozFullScreenElement || 
+                          document.msFullscreenElement;
+      
+      if (!isFullscreen) {
+        fsBtn.classList.add('show');
+      } else {
+        fsBtn.classList.remove('show');
       }
     }
     
+    function activateFullscreen() {
+      const elem = document.documentElement;
+      
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.mozRequestFullScreen) {
+        elem.mozRequestFullScreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    }
+    
+    // Sprawdzaj fullscreen
+    window.addEventListener('load', function() {
+      setTimeout(checkFullscreen, 500);
+      
+      // Próbuj automatycznie jeśli user chciał fullscreen
+      if (sessionStorage.getItem('wantsFullscreen') === 'true') {
+        activateFullscreen();
+        sessionStorage.removeItem('wantsFullscreen');
+      }
+    });
+    
+    document.addEventListener('fullscreenchange', checkFullscreen);
+    document.addEventListener('webkitfullscreenchange', checkFullscreen);
+    document.addEventListener('mozfullscreenchange', checkFullscreen);
+    document.addEventListener('MSFullscreenChange', checkFullscreen);
+    
     function go(rating) {
+      sessionStorage.setItem('wantsFullscreen', 'true');
       location.href = '/thanks?loc=<%= loc %>&rating=' + rating;
     }
   </script>
