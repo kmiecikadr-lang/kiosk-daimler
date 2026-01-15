@@ -143,28 +143,22 @@
   
   <script>
     function openKiosk(location) {
-      const url = '/' + location;
+      // NAJPIERW włącz fullscreen
+      const elem = document.documentElement;
       
-      // Otwórz w nowym oknie
-      const win = window.open(url, '_blank', 'fullscreen=yes');
+      const fullscreenPromise = elem.requestFullscreen ? elem.requestFullscreen() :
+                                elem.webkitRequestFullscreen ? elem.webkitRequestFullscreen() :
+                                elem.mozRequestFullScreen ? elem.mozRequestFullScreen() :
+                                elem.msRequestFullscreen ? elem.msRequestFullscreen() : 
+                                Promise.resolve();
       
-      // Próbuj włączyć fullscreen po załadowaniu
-      if (win) {
-        win.addEventListener('load', function() {
-          setTimeout(() => {
-            const elem = win.document.documentElement;
-            if (elem.requestFullscreen) {
-              elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) {
-              elem.webkitRequestFullscreen();
-            } else if (elem.mozRequestFullScreen) {
-              elem.mozRequestFullScreen();
-            } else if (elem.msRequestFullscreen) {
-              elem.msRequestFullscreen();
-            }
-          }, 100);
-        });
-      }
+      // POTEM przekieruj
+      fullscreenPromise.then(() => {
+        window.location.href = '/' + location;
+      }).catch(() => {
+        // Jeśli fullscreen się nie udał, i tak przekieruj
+        window.location.href = '/' + location;
+      });
     }
   </script>
 </body>
