@@ -106,16 +106,24 @@
   </div>
   
   <script>
-    // Włącz fullscreen przy załadowaniu
+    // Sprawdź czy trzeba włączyć fullscreen
     window.onload = function() {
-      setTimeout(enterFullscreen, 500);
+      const shouldFullscreen = sessionStorage.getItem('requestFullscreen');
+      
+      if (shouldFullscreen === 'true') {
+        // Wyczyść flagę
+        sessionStorage.removeItem('requestFullscreen');
+        
+        // Włącz fullscreen po małym opóźnieniu
+        setTimeout(enterFullscreen, 300);
+      }
     };
     
     function enterFullscreen() {
       const elem = document.documentElement;
       
       if (elem.requestFullscreen) {
-        elem.requestFullscreen();
+        elem.requestFullscreen().catch(err => console.log('Fullscreen error:', err));
       } else if (elem.webkitRequestFullscreen) { // Safari
         elem.webkitRequestFullscreen();
       } else if (elem.mozRequestFullScreen) { // Firefox
