@@ -18,7 +18,7 @@
     .container {
       text-align: center;
       width: 100%;
-      max-width: 1200px;
+      max-width: 1000px;
     }
     .logo {
       width: clamp(80px, 15vw, 150px);
@@ -36,38 +36,65 @@
       font-weight: normal;
     }
     
-    .map-container {
+    .map-wrapper {
       position: relative;
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
-      padding: 20px;
     }
     
-    .map-svg {
+    .map-image {
       width: 100%;
       height: auto;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
+      display: block;
     }
     
-    .location-marker {
+    .location-pin {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: #4CAF50;
+      border: 4px solid white;
+      border-radius: 50%;
       cursor: pointer;
+      transform: translate(-50%, -50%);
       transition: all 0.3s;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      z-index: 10;
     }
     
-    .location-marker:hover circle {
-      r: 18;
-      fill: #45a049;
+    .location-pin:hover {
+      transform: translate(-50%, -50%) scale(1.3);
+      background: #45a049;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
     
-    .location-marker:active {
-      transform: scale(0.9);
+    .location-pin:active {
+      transform: translate(-50%, -50%) scale(0.95);
     }
     
-    .location-marker text {
-      pointer-events: none;
+    .location-label {
+      position: absolute;
+      transform: translate(-50%, 15px);
+      background: rgba(0,0,0,0.85);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: clamp(13px, 3vw, 18px);
       font-weight: bold;
-      font-size: 14px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 5;
     }
+    
+    /* Pozycje zgodne z Twoją mapą */
+    #pin-ruda { top: 68%; left: 35%; }
+    #label-ruda { top: 68%; left: 35%; }
+    
+    #pin-siedlce { top: 44%; left: 74%; }
+    #label-siedlce { top: 44%; left: 74%; }
+    
+    #pin-emilianow { top: 36%; left: 56%; }
+    #label-emilianow { top: 36%; left: 56%; }
     
     .admin-link {
       position: fixed;
@@ -91,13 +118,12 @@
     
     @media (max-width: 768px) {
       body { padding: 15px; }
-      .map-container { padding: 10px; }
-      .location-marker text { font-size: 12px; }
+      .location-pin { width: 40px; height: 40px; }
     }
     
     @media (max-width: 480px) {
       body { padding: 10px; }
-      .location-marker text { font-size: 10px; }
+      .location-pin { width: 35px; height: 35px; border-width: 3px; }
     }
   </style>
 </head>
@@ -107,35 +133,17 @@
     <h1>Daimler Truck Retail Polska</h1>
     <h2>Wybierz lokalizację kiosku na mapie:</h2>
     
-    <div class="map-container">
-      <svg class="map-svg" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
-        <!-- Mapa Polski (uproszczona) -->
-        <path d="M 200 50 L 350 100 L 380 200 L 370 300 L 350 400 L 300 450 L 200 470 L 100 450 L 50 400 L 30 300 L 20 200 L 50 100 Z" 
-              fill="#f0f0f0" 
-              stroke="#333" 
-              stroke-width="2"/>
-        
-        <!-- Ruda Śląska (południowy zachód) -->
-        <g class="location-marker" onclick="openKiosk('ruda')">
-          <circle cx="120" cy="380" r="15" fill="#4CAF50"/>
-          <circle cx="120" cy="380" r="8" fill="white"/>
-          <text x="120" y="410" text-anchor="middle" fill="#333">Ruda Śląska</text>
-        </g>
-        
-        <!-- Siedlce (wschód-centrum) -->
-        <g class="location-marker" onclick="openKiosk('siedlce')">
-          <circle cx="320" cy="220" r="15" fill="#4CAF50"/>
-          <circle cx="320" cy="220" r="8" fill="white"/>
-          <text x="320" y="250" text-anchor="middle" fill="#333">Siedlce</text>
-        </g>
-        
-        <!-- Emilianów (centrum) -->
-        <g class="location-marker" onclick="openKiosk('emilianow')">
-          <circle cx="200" cy="250" r="15" fill="#4CAF50"/>
-          <circle cx="200" cy="250" r="8" fill="white"/>
-          <text x="200" y="280" text-anchor="middle" fill="#333">Emilianów</text>
-        </g>
-      </svg>
+    <div class="map-wrapper">
+      <img src="/mapa-polski.png" alt="Mapa Polski" class="map-image">
+      
+      <div id="pin-ruda" class="location-pin" onclick="openKiosk('ruda')"></div>
+      <div id="label-ruda" class="location-label">Ruda Śląska</div>
+      
+      <div id="pin-siedlce" class="location-pin" onclick="openKiosk('siedlce')"></div>
+      <div id="label-siedlce" class="location-label">Siedlce</div>
+      
+      <div id="pin-emilianow" class="location-pin" onclick="openKiosk('emilianow')"></div>
+      <div id="label-emilianow" class="location-label">Emilianów</div>
     </div>
   </div>
   
