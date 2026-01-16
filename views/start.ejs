@@ -35,46 +35,40 @@
       margin-bottom: clamp(30px, 6vw, 50px);
       font-weight: normal;
     }
-    .locations {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
-      gap: clamp(15px, 3vw, 30px);
-      width: 100%;
+    
+    .map-container {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
     }
-    .location-btn {
-      background: white;
-      border: 3px solid #e0e0e0;
-      border-radius: 20px;
-      padding: clamp(30px, 6vw, 50px) clamp(20px, 4vw, 40px);
+    
+    .map-svg {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
+    }
+    
+    .location-marker {
       cursor: pointer;
       transition: all 0.3s;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      touch-action: manipulation;
-      -webkit-user-select: none;
-      user-select: none;
     }
-    .location-btn:active {
-      transform: scale(0.95);
+    
+    .location-marker:hover circle {
+      r: 18;
+      fill: #45a049;
     }
-    .location-btn:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      border-color: #4CAF50;
+    
+    .location-marker:active {
+      transform: scale(0.9);
     }
-    .location-btn .icon {
-      font-size: clamp(2.5rem, 8vw, 4rem);
-      margin-bottom: clamp(10px, 3vw, 20px);
-    }
-    .location-btn .name {
-      font-size: clamp(1.2rem, 4vw, 1.8rem);
+    
+    .location-marker text {
+      pointer-events: none;
       font-weight: bold;
-      color: #333;
-      margin-bottom: clamp(5px, 2vw, 10px);
+      font-size: 14px;
     }
-    .location-btn .subtitle {
-      font-size: clamp(0.8rem, 2.5vw, 1rem);
-      color: #666;
-    }
+    
     .admin-link {
       position: fixed;
       bottom: clamp(15px, 3vw, 30px);
@@ -94,21 +88,16 @@
       background: #45a049;
       transform: scale(1.05);
     }
-    .admin-link:active {
-      transform: scale(0.95);
-    }
     
     @media (max-width: 768px) {
       body { padding: 15px; }
-      .locations { gap: 15px; }
-      .admin-link { bottom: 15px; right: 15px; padding: 10px 20px; }
+      .map-container { padding: 10px; }
+      .location-marker text { font-size: 12px; }
     }
     
     @media (max-width: 480px) {
       body { padding: 10px; }
-      .container { padding-bottom: 70px; }
-      .locations { gap: 12px; }
-      .location-btn { border-width: 2px; }
+      .location-marker text { font-size: 10px; }
     }
   </style>
 </head>
@@ -116,26 +105,37 @@
   <div class="container">
     <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg" alt="Mercedes" class="logo">
     <h1>Daimler Truck Retail Polska</h1>
-    <h2>Wybierz lokalizację kiosku:</h2>
+    <h2>Wybierz lokalizację kiosku na mapie:</h2>
     
-    <div class="locations">
-      <button class="location-btn" onclick="openKiosk('ruda')">
-        <div class="icon">📍</div>
-        <div class="name">Ruda Śląska</div>
-        <div class="subtitle">Kliknij aby uruchomić</div>
-      </button>
-      
-      <button class="location-btn" onclick="openKiosk('siedlce')">
-        <div class="icon">📍</div>
-        <div class="name">Siedlce</div>
-        <div class="subtitle">Kliknij aby uruchomić</div>
-      </button>
-      
-      <button class="location-btn" onclick="openKiosk('emilianow')">
-        <div class="icon">📍</div>
-        <div class="name">Emilianów</div>
-        <div class="subtitle">Kliknij aby uruchomić</div>
-      </button>
+    <div class="map-container">
+      <svg class="map-svg" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+        <!-- Mapa Polski (uproszczona) -->
+        <path d="M 200 50 L 350 100 L 380 200 L 370 300 L 350 400 L 300 450 L 200 470 L 100 450 L 50 400 L 30 300 L 20 200 L 50 100 Z" 
+              fill="#f0f0f0" 
+              stroke="#333" 
+              stroke-width="2"/>
+        
+        <!-- Ruda Śląska (południowy zachód) -->
+        <g class="location-marker" onclick="openKiosk('ruda')">
+          <circle cx="120" cy="380" r="15" fill="#4CAF50"/>
+          <circle cx="120" cy="380" r="8" fill="white"/>
+          <text x="120" y="410" text-anchor="middle" fill="#333">Ruda Śląska</text>
+        </g>
+        
+        <!-- Siedlce (wschód-centrum) -->
+        <g class="location-marker" onclick="openKiosk('siedlce')">
+          <circle cx="320" cy="220" r="15" fill="#4CAF50"/>
+          <circle cx="320" cy="220" r="8" fill="white"/>
+          <text x="320" y="250" text-anchor="middle" fill="#333">Siedlce</text>
+        </g>
+        
+        <!-- Emilianów (centrum) -->
+        <g class="location-marker" onclick="openKiosk('emilianow')">
+          <circle cx="200" cy="250" r="15" fill="#4CAF50"/>
+          <circle cx="200" cy="250" r="8" fill="white"/>
+          <text x="200" y="280" text-anchor="middle" fill="#333">Emilianów</text>
+        </g>
+      </svg>
     </div>
   </div>
   
@@ -143,7 +143,6 @@
   
   <script>
     function openKiosk(location) {
-      // Po prostu przekieruj - bez wymuszania fullscreen
       window.location.href = '/' + location;
     }
   </script>
