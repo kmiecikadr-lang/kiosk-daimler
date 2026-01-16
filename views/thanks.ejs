@@ -79,17 +79,15 @@
     </div>
     
     <div id="done" style="display:none">
-      <h1>Dziękujemy za opinię!</h1>
+      <h1>Twoja opinia jest dla nas ważna</h1>
     </div>
   </div>
   
   <script>
-    // Włącz fullscreen przy załadowaniu
     window.addEventListener('load', function() {
       ensureFullscreen();
     });
     
-    // Monitoruj fullscreen
     document.addEventListener('fullscreenchange', ensureFullscreen);
     document.addEventListener('webkitfullscreenchange', ensureFullscreen);
     document.addEventListener('mozfullscreenchange', ensureFullscreen);
