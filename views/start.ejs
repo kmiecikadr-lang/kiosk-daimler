@@ -142,28 +142,8 @@
   <a href="/admin/login" class="admin-link">🔐 Panel Admina</a>
   
   <script>
-    async function openKiosk(location) {
-      // Zapisz że user chce fullscreen
-      sessionStorage.setItem('wantsFullscreen', 'true');
-      
-      // Spróbuj włączyć fullscreen PRZED przekierowaniem
-      const elem = document.documentElement;
-      
-      try {
-        if (elem.requestFullscreen) {
-          await elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) {
-          await elem.webkitRequestFullscreen();
-        } else if (elem.mozRequestFullScreen) {
-          await elem.mozRequestFullScreen();
-        } else if (elem.msRequestFullscreen) {
-          await elem.msRequestFullscreen();
-        }
-      } catch (err) {
-        console.log('Fullscreen not supported or blocked');
-      }
-      
-      // Przekieruj (może utrzymać fullscreen w niektórych przeglądarkach)
+    function openKiosk(location) {
+      // Po prostu przekieruj - bez wymuszania fullscreen
       window.location.href = '/' + location;
     }
   </script>
