@@ -40,6 +40,7 @@
       position: relative;
       max-width: 700px;
       margin: 0 auto;
+      cursor: pointer;
     }
     
     .map-image {
@@ -48,57 +49,37 @@
       display: block;
     }
     
-    .location-pin {
+    /* Niewidoczne klikalne obszary - dokładnie na czarnych kropkach */
+    .clickable-area {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background: #000;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       cursor: pointer;
       transform: translate(-50%, -50%);
-      transition: all 0.3s;
       z-index: 10;
+      /* DEBUG - odkomentuj żeby zobaczyć obszary */
+      /* background: rgba(76, 175, 80, 0.3); */
+      /* border: 2px solid red; */
     }
     
-    .location-pin:hover {
-      transform: translate(-50%, -50%) scale(1.5);
-      background: #4CAF50;
-      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.5);
+    .clickable-area:hover {
+      background: rgba(76, 175, 80, 0.3);
     }
     
-    .location-pin:active {
-      transform: translate(-50%, -50%) scale(1.2);
+    .clickable-area:active {
+      background: rgba(76, 175, 80, 0.5);
     }
     
-    .location-label {
-      position: absolute;
-      transform: translate(-50%, 15px);
-      background: rgba(0,0,0,0.85);
-      color: white;
-      padding: 6px 14px;
-      border-radius: 15px;
-      font-size: clamp(12px, 2.5vw, 16px);
-      font-weight: bold;
-      white-space: nowrap;
-      pointer-events: none;
-      z-index: 5;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
+    /* Pozycje - dokładnie na czarnych kropkach z mapy */
+    /* Emilianów - górna kropka */
+    #area-emilianow { top: 29.5%; left: 58.5%; }
     
-    .location-pin:hover + .location-label {
-      opacity: 1;
-    }
+    /* Siedlce - prawa kropka (nieco niżej) */
+    #area-siedlce { top: 36.5%; left: 71%; }
     
-    /* Pozycje DOKŁADNIE na czarnych kropkach z Twojej mapy */
-    #pin-emilianow { top: 30%; left: 59%; }
-    #label-emilianow { top: 30%; left: 59%; }
-    
-    #pin-siedlce { top: 38%; left: 72%; }
-    #label-siedlce { top: 38%; left: 72%; }
-    
-    #pin-ruda { top: 62%; left: 41%; }
-    #label-ruda { top: 62%; left: 41%; }
+    /* Ruda Śląska - dolna lewa kropka */
+    #area-ruda { top: 61%; left: 40.5%; }
     
     .admin-link {
       position: fixed;
@@ -122,12 +103,12 @@
     
     @media (max-width: 768px) {
       body { padding: 15px; }
-      .location-pin { width: 18px; height: 18px; }
+      .clickable-area { width: 60px; height: 60px; }
     }
     
     @media (max-width: 480px) {
       body { padding: 10px; }
-      .location-pin { width: 16px; height: 16px; }
+      .clickable-area { width: 70px; height: 70px; }
     }
   </style>
 </head>
@@ -140,14 +121,10 @@
     <div class="map-wrapper">
       <img src="/mapa-polski.png" alt="Mapa Polski" class="map-image">
       
-      <div id="pin-emilianow" class="location-pin" onclick="openKiosk('emilianow')"></div>
-      <div id="label-emilianow" class="location-label">Emilianów</div>
-      
-      <div id="pin-siedlce" class="location-pin" onclick="openKiosk('siedlce')"></div>
-      <div id="label-siedlce" class="location-label">Siedlce</div>
-      
-      <div id="pin-ruda" class="location-pin" onclick="openKiosk('ruda')"></div>
-      <div id="label-ruda" class="location-label">Ruda Śląska</div>
+      <!-- Niewidoczne klikalne obszary -->
+      <div id="area-emilianow" class="clickable-area" onclick="openKiosk('emilianow')"></div>
+      <div id="area-siedlce" class="clickable-area" onclick="openKiosk('siedlce')"></div>
+      <div id="area-ruda" class="clickable-area" onclick="openKiosk('ruda')"></div>
     </div>
   </div>
   
