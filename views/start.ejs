@@ -51,8 +51,8 @@
     
     .clickable-area {
       position: absolute;
-      width: 50px;
-      height: 50px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
       cursor: pointer;
       transform: translate(-50%, -50%);
@@ -60,21 +60,23 @@
     }
     
     .clickable-area:hover {
-      background: rgba(76, 175, 80, 0.3);
+      background: rgba(76, 175, 80, 0.4);
+      width: 45px;
+      height: 45px;
     }
     
     .clickable-area:active {
-      background: rgba(76, 175, 80, 0.5);
+      background: rgba(76, 175, 80, 0.6);
     }
     
-    /* Emilianów - górna kropka */
-    #area-emilianow { top: 29.5%; left: 58.5%; }
+    /* Emilianów - górna środkowa kropka */
+    #area-emilianow { top: 30%; left: 59%; }
     
-    /* Siedlce - przesunięte w lewo i na dół */
-    #area-siedlce { top: 40%; left: 68%; }
+    /* Siedlce - prawa kropka (trochę niżej) */
+    #area-siedlce { top: 38.5%; left: 69%; }
     
     /* Ruda Śląska - dolna lewa kropka */
-    #area-ruda { top: 61%; left: 40.5%; }
+    #area-ruda { top: 61.5%; left: 40%; }
     
     .admin-link {
       position: fixed;
@@ -98,12 +100,14 @@
     
     @media (max-width: 768px) {
       body { padding: 15px; }
-      .clickable-area { width: 60px; height: 60px; }
+      .clickable-area { width: 45px; height: 45px; }
+      .clickable-area:hover { width: 55px; height: 55px; }
     }
     
     @media (max-width: 480px) {
       body { padding: 10px; }
-      .clickable-area { width: 70px; height: 70px; }
+      .clickable-area { width: 50px; height: 50px; }
+      .clickable-area:hover { width: 60px; height: 60px; }
     }
   </style>
 </head>
