@@ -12,6 +12,22 @@ app.set('view engine', 'ejs');
 // START PAGE
 app.get('/', (req, res) => res.render('start'));
 
+// Health check - odwiedzany cyklicznie przez zewnętrzny serwis (np. UptimeRobot),
+// żeby Render i Supabase nigdy nie usnęły z powodu braku aktywności
+app.get('/health', async (req, res) => {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/opinions?select=id&limit=1`, {
+      headers: {
+        'apikey': SUPABASE_SERVICE_KEY,
+        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+      }
+    });
+    res.json({ ok: true, time: new Date().toISOString() });
+  } catch (e) {
+    res.json({ ok: false, error: e.message });
+  }
+});
+
 // Kiosk routes
 app.get('/ruda', (req, res) => res.render('kiosk', { loc: 'ruda', name: 'Daimler Truck Retail Polska - Ruda Śląska' }));
 app.get('/siedlce', (req, res) => res.render('kiosk', { loc: 'siedlce', name: 'Daimler Truck Retail Polska - Siedlce' }));
