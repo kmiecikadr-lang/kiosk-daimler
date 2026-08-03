@@ -157,15 +157,10 @@
       }
     }
     
-    // Sprawdzaj fullscreen
+    // Zawsze próbuj automatycznie włączyć pełny ekran przy wczytaniu strony
     window.addEventListener('load', function() {
+      activateFullscreen();
       setTimeout(checkFullscreen, 500);
-      
-      // Próbuj automatycznie jeśli user chciał fullscreen
-      if (sessionStorage.getItem('wantsFullscreen') === 'true') {
-        activateFullscreen();
-        sessionStorage.removeItem('wantsFullscreen');
-      }
     });
     
     document.addEventListener('fullscreenchange', checkFullscreen);
@@ -174,7 +169,6 @@
     document.addEventListener('MSFullscreenChange', checkFullscreen);
     
     function go(rating) {
-      sessionStorage.setItem('wantsFullscreen', 'true');
       location.href = '/thanks?loc=<%= loc %>&rating=' + rating;
     }
   </script>
