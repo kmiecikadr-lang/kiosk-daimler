@@ -158,8 +158,28 @@ app.get('/admin/export', async (req, res) => {
     });
     
     const data = await response.json();
-    
+
+    const locationNames = {
+      ruda: 'Ruda Śląska',
+      siedlce: 'Siedlce',
+      emilianow: 'Emilianów'
+    };
+
+    // Policz oceny dla każdej lokalizacji
+    const statsByLocation = {};
+    data.forEach(opinion => {
+      if (!statsByLocation[opinion.location]) {
+        statsByLocation[opinion.location] = { happy: 0, neutral: 0, sad: 0 };
+      }
+      const s = statsByLocation[opinion.location];
+      if (opinion.rating === 'happy') s.happy++;
+      if (opinion.rating === 'neutral') s.neutral++;
+      if (opinion.rating === 'sad') s.sad++;
+    });
+
     const workbook = new ExcelJS.Workbook();
+
+    // --- ARKUSZ 1: Dane szczegółowe ---
     const worksheet = workbook.addWorksheet('Opinie');
     
     worksheet.columns = [
@@ -176,7 +196,7 @@ app.get('/admin/export', async (req, res) => {
       
       worksheet.addRow({
         date: date.toLocaleString('pl-PL'),
-        location: opinion.location,
+        location: locationNames[opinion.location] || opinion.location,
         rating: ratingText,
         comment: opinion.comment || ''
       });
@@ -188,7 +208,55 @@ app.get('/admin/export', async (req, res) => {
       pattern: 'solid',
       fgColor: { argb: 'FFE0E0E0' }
     };
-    
+
+    // --- ARKUSZ 2: Wykresy dla każdej lokalizacji ---
+    const chartSheet = workbook.addWorksheet('Wykresy');
+    let currentRow = 1;
+
+    for (const loc of Object.keys(statsByLocation)) {
+      const s = statsByLocation[loc];
+      const label = locationNames[loc] || loc;
+
+      chartSheet.getCell(`A${currentRow}`).value = label;
+      chartSheet.getCell(`A${currentRow}`).font = { bold: true, size: 14 };
+      currentRow += 1;
+
+      const chartConfig = {
+        type: 'bar',
+        data: {
+          labels: ['Bardzo dobrze', 'W porządku', 'Źle'],
+          datasets: [{
+            label: label,
+            data: [s.happy, s.neutral, s.sad],
+            backgroundColor: ['#4CAF50', '#FFC107', '#f44336']
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { display: false },
+            title: { display: true, text: `${label} (razem: ${s.happy + s.neutral + s.sad})` }
+          }
+        }
+      };
+
+      const chartUrl = `https://quickchart.io/chart?width=500&height=300&backgroundColor=white&c=${encodeURIComponent(JSON.stringify(chartConfig))}`;
+
+      try {
+        const chartResponse = await fetch(chartUrl);
+        const chartBuffer = Buffer.from(await chartResponse.arrayBuffer());
+        const imageId = workbook.addImage({ buffer: chartBuffer, extension: 'png' });
+
+        chartSheet.addImage(imageId, {
+          tl: { col: 0, row: currentRow - 0.1 },
+          ext: { width: 500, height: 300 }
+        });
+      } catch (chartError) {
+        chartSheet.getCell(`A${currentRow}`).value = 'Nie udało się wygenerować wykresu';
+      }
+
+      currentRow += 17; // odstęp na kolejny wykres
+    }
+
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename=opinie.xlsx');
     
