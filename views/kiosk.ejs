@@ -45,21 +45,22 @@
     }
     .btn { 
       padding: clamp(30px, 8vw, 50px); 
-      border: 4px solid; 
-      border-radius: 20px; 
+      border: none;
+      border-radius: 28px; 
       cursor: pointer; 
       font-size: clamp(1rem, 3vw, 1.3rem);
-      background: white;
+      font-weight: 600;
       transition: all 0.3s;
       touch-action: manipulation;
       -webkit-user-select: none;
       user-select: none;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     .btn:active { transform: scale(0.95); }
-    .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-    .green { background: #4CAF50; border-color: #2E7D32; color: #fff; }
-    .yellow { background: #FFC107; border-color: #F57F17; color: #333; }
-    .red { background: #f44336; border-color: #B71C1C; color: #fff; }
+    .btn:hover { transform: translateY(-5px); box-shadow: 0 14px 28px rgba(0,0,0,0.22); }
+    .green { background: linear-gradient(135deg, #0ba360, #3ddc84); color: #fff; }
+    .yellow { background: linear-gradient(135deg, #ffb88c, #ff9a56); color: #5a3418; }
+    .red { background: linear-gradient(135deg, #e91e63, #ff5252); color: #fff; }
     .emoji { font-size: clamp(60px, 15vw, 90px); display: block; margin-bottom: 15px; }
 
     #thanksScreen { display: none; }
