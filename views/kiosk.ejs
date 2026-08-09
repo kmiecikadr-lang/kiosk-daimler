@@ -61,6 +61,10 @@
     .yellow { background: #fff9c4; border-color: #FFC107; }
     .red { background: #ffebee; border-color: #f44336; }
     .emoji { font-size: clamp(60px, 15vw, 90px); display: block; margin-bottom: 15px; }
+
+    #thanksScreen { display: none; }
+    #thanksScreen h1 { font-size: clamp(2rem, 8vw, 3.5rem); color: #4CAF50; margin: 20px; }
+    #thanksScreen h2 { font-size: clamp(1.2rem, 4vw, 2rem); color: #333; margin: 20px; }
     
     /* Floating fullscreen button */
     #fullscreenBtn {
@@ -107,7 +111,7 @@
   </style>
 </head>
 <body>
-  <div class="wrapper">
+  <div class="wrapper" id="ratingScreen">
     <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg">
     <h1>Jak oceniasz wizytę w serwisie?</h1>
     <div class="badge"><%= name %></div>
@@ -125,6 +129,12 @@
         Źle
       </button>
     </div>
+  </div>
+
+  <div class="wrapper" id="thanksScreen">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg">
+    <h1>Dziękujemy, Twoja opinia jest dla nas ważna</h1>
+    <h2>Daimler Truck Retail Polska</h2>
   </div>
   
   <button id="fullscreenBtn" onclick="activateFullscreen()">🖥️ Włącz pełny ekran</button>
@@ -171,7 +181,24 @@
     document.addEventListener('MSFullscreenChange', checkFullscreen);
     
     function go(rating) {
-      location.href = '/thanks?loc=<%= loc %>&rating=' + rating;
+      document.getElementById('ratingScreen').style.display = 'none';
+      document.getElementById('thanksScreen').style.display = 'block';
+
+      fetch('/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ loc: '<%= loc %>', rating: rating, comment: '' })
+      })
+      .then(r => r.json())
+      .then(d => {
+        if (!d.ok) console.log('Zapis się nie powiódł:', d);
+      })
+      .catch(e => console.log('Błąd zapisu:', e));
+
+      setTimeout(() => {
+        document.getElementById('thanksScreen').style.display = 'none';
+        document.getElementById('ratingScreen').style.display = 'block';
+      }, 3000);
     }
   </script>
 </body>
